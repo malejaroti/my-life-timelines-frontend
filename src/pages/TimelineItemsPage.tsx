@@ -37,7 +37,7 @@ const styleModalBox = {
 export interface ITimelineItem {
   //Full server model
   _id: string;
-  timeline: string;
+  timeline: string | ITimeline;
   creator: string;
   // kind: string;
   title: string;

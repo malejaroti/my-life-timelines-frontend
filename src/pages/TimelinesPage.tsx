@@ -8,13 +8,14 @@ import { useNavigate } from 'react-router';
 import TimelineCard from '../components/TimelineCard';
 import Drawer from '@mui/material/Drawer';
 import AddButton from '../components/AddButton';
-import type { DrawerState } from './TimelineItemsPage';
+import type { DrawerState, ITimelineItem } from './TimelineItemsPage';
 import TimelineForm from '../components/Forms/TimelineForm';
 import type { FormType } from '../components/Forms/ItemForm';
 import { AuthContext } from '../context/auth.context';
 import DeleteModal from '../components/DeleteModal';
 import { TimelinesCardsContainer } from '../components/styled/CardsContainer'
 import type { IUser } from './UserProfilePage';
+import CombinedLinearTimeline from '../components/CombinedLinearTimeline';
 export interface ITimeline {
   _id: string;
   owner: IUser;
@@ -44,10 +45,11 @@ export type TimelineCreatePayload = {
 function TimelinesPage() {
   const authContext = useContext(AuthContext);
   if (!authContext) {
-    throw new Error('Timeline creation must be done within an AuthWrapper');
+    throw new Error('Timelines must be accessed within an AuthWrapper');
   }
   const { loggedUserId } = authContext;
   const [userTimelines, setUserTimelines] = useState<ITimeline[]>([]);
+  const [allTimelineItems, setAllTimelineItems] = useState<ITimelineItem[]>([]);
   const [collaborationTimelines, setCollaborationTimelines] = useState<ITimeline[]>([]);
   const [selectedTimeline, setSelectedTimeline] = useState<ITimeline | null>(null);
   const [formType, setFormType] = useState<FormType>(null);
@@ -61,6 +63,7 @@ function TimelinesPage() {
 
 
   useEffect(() => {
+    getAllTimelineItemsCurrentYear();
     getUserTimelines();
     getCollaborationTimelines();
     getUsersData();
@@ -72,6 +75,15 @@ function TimelinesPage() {
       const response = await api.get('/timelines');
       // console.log("user timelines", response)
       setUserTimelines(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllTimelineItemsCurrentYear = async () => {
+    try {
+      const response = await api.get('/items');
+      // console.log("all timeline items", response)
+      setAllTimelineItems(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -169,7 +181,9 @@ function TimelinesPage() {
             </Button>
           </Stack>
         </Box>
-
+        <Box>
+          <CombinedLinearTimeline items={allTimelineItems} />
+        </Box>
         <TimelinesCardsContainer>
           {userTimelines.map((timeline) => (
             // {console.log(timeline)}
