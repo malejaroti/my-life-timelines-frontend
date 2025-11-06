@@ -11,7 +11,8 @@ type TimelineItemCardProps = {
 
 function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickEdit }: TimelineItemCardProps) {
 
-    const calculateDays = (startDate?: string, endDate?: string) => {
+    const calculateEventDuration = (startDate?: string, endDate?: string) => {
+        if (!endDate) return 0; // ongoing event, duration is already covered by "since start date"
         if (!startDate) return 0;
         const start = new Date(startDate);
         const end = endDate ? new Date(endDate) : new Date();
@@ -22,6 +23,19 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
             return days > 1 ? `${days} days` : ``;
         }
         return months > 1 ? `${days} days (${months} months)` : ``;
+    }
+    const calculateDaysSinceStartDate = (startDate?: string, endDate?: string) => {
+        if (!startDate) return 0;
+        const start = new Date(startDate);
+        const todayDate =  new Date();
+        const diffTime = Math.abs(todayDate.getTime() - start.getTime());
+        const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // convert to days
+        const months = Math.floor(days / 30);
+        const previousWord = endDate === null || endDate === undefined ? "Started: " : " ";
+        if (days <= 31) {
+            return previousWord + (days > 1 ? `${days} days ago` : ``);
+        }
+        return previousWord + (months > 1 ? `${days} days (${months} months) ago` : `${days} days ago`);
     }
 
     const calculateAgeAtDate = (birthDateStr: string, targetDateStr: string) => {
@@ -45,7 +59,7 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 backgroundColor: '#e2e8f0',
                 // justifyContent: 'space-between'
                 // justifyContent: 'space-between'
-            }}  
+            }}
         >
             {timelineItem.images.length !== 0 ?
                 // <CardMedia
@@ -108,7 +122,7 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 flex: '1 1 auto',
                 // border:1,
             }} className="">
-                <Typography gutterBottom variant="h6" component="div" 
+                <Typography gutterBottom variant="h6" component="div"
                 sx={{ marginBottom: '2px', textAlign: 'center', lineHeight:'1' }}>
                     {timelineItem.title}
                 </Typography>
@@ -117,10 +131,12 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                         fontSize: '0.8rem',
                         color: 'text.secondary',
                         textAlign: 'center',
+                        paddingBottom: '8px',
+
                     }}>
                     {formatDate(timelineItem.startDate)}
-                    {timelineItem.startDate === timelineItem.endDate 
-                    ? "" 
+                    {timelineItem.startDate === timelineItem.endDate
+                    ? ""
                     : timelineItem.endDate
                         ? ` - ${formatDate(timelineItem.endDate)}
                           `
@@ -131,11 +147,23 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                     sx={{
                         fontSize: '0.8rem',
                         color: 'text.secondary',
-                        paddingBottom: '8px',
                         textAlign: 'center',
                         fontStyle: 'italic',
                     }}>
-                    {calculateDays(timelineItem.startDate, timelineItem.endDate)} 
+                    {calculateDaysSinceStartDate(timelineItem.startDate, timelineItem.endDate)}
+                </Typography>
+                <Typography variant="body2"
+                    sx={{
+                        fontSize: '0.8rem',
+                        color: 'text.secondary',
+                        textAlign: 'center',
+                        fontStyle: 'italic',
+                        paddingBottom: '8px',
+                    }}>
+                    {(() => {
+                        const eventDuration = calculateEventDuration(timelineItem.startDate, timelineItem.endDate);
+                        return eventDuration ? "Duration: " + eventDuration : null;
+                    })()}
                 </Typography>
                 <Typography variant="body2" sx={{
                     color: 'text.secondary',
