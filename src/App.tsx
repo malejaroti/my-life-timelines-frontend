@@ -14,6 +14,7 @@ import Home from './pages/Home.tsx';
 import LifeTimeline from './pages/LifeTimeline.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import UserProfilePage from './pages/UserProfilePage.tsx';
+import TimelinesList from './pages/TimelinesList.tsx';
 
 // import Link from '@mui/material/Link'
 
@@ -29,12 +30,8 @@ function App() {
         <main className="max-w-full flex-1 px-10 py-5 ">
           {/* <div className='central-section bb-black h-full w-[50%] m-auto'> */}
           <Routes>
-            <Route path="/timelines"
-              element={<OnlyPrivate> {' '}
-                <TimelinesPage />{' '}
-              </OnlyPrivate>
-              }
-            />
+            <Route path="/timelines" element={<OnlyPrivate><TimelinesPage/></OnlyPrivate>} />
+            <Route path="/timelinesList" element={<OnlyPrivate><TimelinesList/></OnlyPrivate>} />
             <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
             <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
             <Route path="/lifetimeline" element={<OnlyPrivate> <LifeTimeline /> </OnlyPrivate>} />
