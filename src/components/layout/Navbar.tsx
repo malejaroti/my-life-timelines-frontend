@@ -72,7 +72,7 @@ function Navbar() {
   const getUserData = async () => {
     try {
       const response = await api.get('/users/logged-user');
-      console.log("user data", response)
+      // console.log("user data", response)
       setUserData(response.data);
     } catch (error) {
       console.log(error);
@@ -136,6 +136,16 @@ function Navbar() {
               <NavLink to={'/lifetimeline'}>
                 <Typography variant="h6" sx={navLinkStyles}>
                   Life timeline
+                </Typography>
+              </NavLink>
+            </li>
+          )}
+
+          {isLoggedIn && (
+            <li>
+              <NavLink to={'/timelinesList'}>
+                <Typography variant="h6" sx={navLinkStyles}>
+                  Timelines List
                 </Typography>
               </NavLink>
             </li>

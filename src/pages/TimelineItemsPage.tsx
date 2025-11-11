@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import api from '../services/config.services';
 import { Link, useNavigate, useParams } from 'react-router';
 import Typography from '@mui/material/Typography';
-import type { ITimeline } from './TimelinesPage';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import ItemForm, { type FormType } from '../components/Forms/ItemForm';
@@ -18,6 +17,9 @@ import SimplerTimelineWidget from '../components/vis-timeline/simplerTimelineGpt
 import AddButton from '../components/AddButton';
 import DeleteModal from '../components/DeleteModal';
 import TimelineItemCard from '../components/TimelineItemCard';
+import type { ITimeline } from './TimelinesPage';
+import type { ITag } from '../types/index';
+
 
 
 
@@ -46,7 +48,7 @@ export interface ITimelineItem {
   endDate?: string; // ISO 8601 string
   images: string[]; // always an array; empty if none
   impact?: string;
-  tags: string[]; // empty array if none
+  tags: ITag[]; // empty array if none
   isApproved: boolean; // server controlled
   comments: string[]; // empty array if none
   createdAt: string; // ISO timestamp
@@ -90,15 +92,13 @@ function TimelineItemsPage() {
 
   useEffect(() => {
     const visTimelineContainer = visTimelineContainerRef.current;
-    console.log(visTimelineContainer)
-
   }, [])
   
 
   const getTimelineDetails = async () => {
     try {
       const response = await api.get(`/timelines/${timelineId}`);
-      console.log('timeline details', response);
+      // console.log('timeline details', response);
       setTimelineDetails(response.data);
     } catch (error) {
       console.log(error);
@@ -108,7 +108,7 @@ function TimelineItemsPage() {
   const getTimelineItems = async () => {
     try {
       const response = await api.get(`/timelines/${timelineId}/items`);
-      console.log('timeline items', response);
+      // console.log('timeline items', response);
       setTimelineItems(response.data);
     } catch (error) {
       console.log(error);
@@ -196,6 +196,7 @@ function TimelineItemsPage() {
           <div className=" max-w-full flex overflow-x-scroll justify-left gap-10 mt-5 lg:flex-row sm:flex-col max-h-[600px] rounded-md border-1 border-slate-200 p-2 ">
             {timelineItems.map((timelineItem) => (
               <TimelineItemCard
+                key={timelineItem._id}
                 timelineItem={timelineItem}
                 callbackOnClickEdit={() => openDrawerEdit(timelineItem, 'right')}
                 callbackOnClickTrash={() => handleClickOnTrashIcon(timelineItem)}
