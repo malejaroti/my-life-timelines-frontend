@@ -179,6 +179,15 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 }}>
                     {timelineItem.description}
                 </Typography>
+                <Box sx={{ marginTop: '10px' }}>
+                    {timelineItem.tags.length === 0 ? null : (
+                        <div className='flex flex-wrap gap-1'>
+                            {timelineItem.tags.map(tag => (
+                                <span key={tag._id} className='inline-block  border-slate-100 border-[1px]  bg-blue-100 text-blue-800 text-[10px] px-2 py-1 rounded-full max-w-[100px] truncate'>{tag.name}</span>
+                            ))}
+                        </div>
+                    )}
+                </Box>
             </CardContent>
             <Box sx={{
                 display: 'flex',
