@@ -11,31 +11,52 @@ type TimelineItemCardProps = {
 
 function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickEdit }: TimelineItemCardProps) {
 
-    const calculateEventDuration = (startDate?: string, endDate?: string) => {
-        if (!endDate) return 0; // ongoing event, duration is already covered by "since start date"
-        if (!startDate) return 0;
+    // Common utility function to calculate days between dates
+    const calculateDaysBetween = (startDate: string, endDate?: string): number => {
         const start = new Date(startDate);
         const end = endDate ? new Date(endDate) : new Date();
         const diffTime = Math.abs(end.getTime() - start.getTime());
-        const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // convert to days
-        const months = Math.floor(days / 30);
-        if (days <= 31) {
-            return days > 1 ? `${days} days` : ``;
-        }
-        return months > 1 ? `${days} days (${months} months)` : ``;
+        return Math.floor(diffTime / (1000 * 60 * 60 * 24));
     }
-    const calculateDaysSinceStartDate = (startDate?: string, endDate?: string) => {
-        if (!startDate) return 0;
-        const start = new Date(startDate);
-        const todayDate =  new Date();
-        const diffTime = Math.abs(todayDate.getTime() - start.getTime());
-        const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // convert to days
-        const months = Math.floor(days / 30);
-        const previousWord = endDate === null || endDate === undefined ? "Started: " : " ";
+
+    // Common utility function to format time periods
+    const formatTimePeriod = (days: number, includeMonths: boolean = true): string => {
         if (days <= 31) {
-            return previousWord + (days > 1 ? `${days} days ago` : ``);
+            return days > 1 ? `${days} days` : days === 1 ? `${days} day` : '';
         }
-        return previousWord + (months > 1 ? `${days} days (${months} months) ago` : `${days} days ago`);
+        
+        const months = Math.floor(days / 30);
+        const remainingDays = 30- days % 30;
+        
+        if (!includeMonths) {
+            return `${days} days`;
+        }
+        
+        return months > 1 
+            ? `${days} days (${months} months${remainingDays > 0 ? `, ${remainingDays} days` : ''})`
+            : `${days} days`;
+    }
+
+    const calculateEventDuration = (startDate?: string, endDate?: string): string => {
+        if (!endDate || !startDate) return ''; // No duration if dates are missing
+        if (endDate === startDate) return ''; // No duration if is a single day event
+        
+        const days = calculateDaysBetween(startDate, endDate) + 1; // +1 to include both start and end dates
+        return formatTimePeriod(days, false);
+    }
+
+    const calculateDaysSinceStartDate = (startDate?: string, endDate?: string): string => {
+        if (!startDate) return '';
+        
+        const days = calculateDaysBetween(startDate);
+        const prefix = endDate === null || endDate === undefined ? "Started: " : " "; // Only show "Started" if the event is ongoing
+        const timePeriod = formatTimePeriod(days);
+        
+        if (days <= 31) {
+            return prefix + (days > 1 ? `${days} days ago` : `${days} day ago`);
+        }
+        
+        return prefix + timePeriod + ' ago';
     }
 
     const calculateAgeAtDate = (birthDateStr: string, targetDateStr: string) => {
