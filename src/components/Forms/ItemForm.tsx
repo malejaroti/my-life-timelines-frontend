@@ -107,7 +107,7 @@ export default function ItemForm(props: ItemFormProps) {
     }
   }
 
-  const options = tagsForTimelineItems.map((tag) => ({ value: tag.name, label: tag.name, id:tag._id }));
+  const options: SelectOption[] = tagsForTimelineItems.map((tag) => ({ value: tag.name, label: tag.name, id:tag._id }));
 
   const datePickerSlotProps = {
       popper: {
@@ -130,7 +130,7 @@ export default function ItemForm(props: ItemFormProps) {
       [name]: value,
     }));
   };
-  const handleTagsSelection = (newValue: MultiValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => {
+  const handleTagsSelection = (newValue: MultiValue<SelectOption>) => {
     setSelectedTags([...newValue]);
   }
 
@@ -184,7 +184,8 @@ export default function ItemForm(props: ItemFormProps) {
       ? [...formData.images, uploadedImageUrl]
       : formData.images;
 
-    const finalTags = selectedTags.map(tag => tag._id ? { _id: tag._id } : { name: tag.value });
+    console.log("selectedTags: ", selectedTags)
+    const finalTags = selectedTags.map(tag => tag.id ? { _id: tag.id } : { name: tag.value });
     console.log("finalTags: ", finalTags)
 
     const newItem = {

@@ -1,7 +1,7 @@
 export type SelectOption = { 
     value: string, 
     label: string,
-    _id?: string
+    id?: string // to store existing tag id if available and facilitate the mapping
 };
 
 export interface ITag {
