@@ -16,6 +16,7 @@ import DeleteModal from '../components/DeleteModal';
 import { TimelinesCardsContainer } from '../components/styled/CardsContainer'
 import type { IUser } from './UserProfilePage';
 import CombinedLinearTimeline from '../components/CombinedLinearTimeline';
+import { BoxTimelinesList } from '../components/styled/BoxTimelinesPage';
 export interface ITimeline {
   _id: string;
   owner: IUser;
@@ -79,6 +80,7 @@ function TimelinesPage() {
       console.log(error);
     }
   };
+
   const getAllTimelineItemsCurrentYear = async () => {
     try {
       const response = await api.get('/items');
@@ -184,19 +186,64 @@ function TimelinesPage() {
         <Box>
           <CombinedLinearTimeline items={allTimelineItems} />
         </Box>
-        <TimelinesCardsContainer>
-          {userTimelines.map((timeline) => (
-            // {console.log(timeline)}
-            <TimelineCard
-              key={timeline._id}
-              timelineOwner={timeline.owner._id === loggedUserId ? "loggedUser" : "collaborator"}
-              timeline={timeline}
-              onClickEditButton={() => openDrawerWithEditForm(timeline)}
-              handleClickOnDeleteButton={() => openDeleteModal(timeline)}
-              allUsers={usersData ?? []}
-            />
-          ))}
-        </TimelinesCardsContainer>
+        
+        {/* Container for timelines list (left) and timelines container(right) */}
+        <Stack direction="row" spacing={2}
+          sx={{ pt: 3 }}
+        >
+          {/* Left - Timelines list */}
+          <Stack spacing={2}> 
+            <Box
+              sx={{    
+                border: '1px solid',
+                borderRadius: 1, // rounded-md
+                borderColor: 'grey.300', // border-slate-200
+                width:'fit-content', 
+                p:2, 
+                height: 'fit-content', 
+                flexShrink: 0
+              }}>
+              <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>MY OWN TIMELINES</Typography>
+              {userTimelines.map((timeline, index) => (
+                <Typography
+                  key={timeline._id}
+                  variant="body1"
+                  component="p"
+                  sx={{ mb: 1, whiteSpace: 'nowrap' }}
+                >
+                  {index+1 + ". " + timeline.title}
+                </Typography>
+              ))}
+            </Box>
+            <BoxTimelinesList>
+              <Typography sx={{ fontWeight: 'bold' }}>Collaboration timelines</Typography>
+              {collaborationTimelines.map((timeline, index) => (
+                <Typography
+                  key={timeline._id}
+                  variant="body1"
+                  component="p"
+                  sx={{ mb: 1, whiteSpace: 'nowrap' }}
+                >
+                  {index+1 + ". " + timeline.title}
+                </Typography>
+              ))}
+            </BoxTimelinesList>
+          </Stack>
+
+          <TimelinesCardsContainer>
+            {userTimelines.map((timeline) => (
+              // {console.log(timeline)}
+              <TimelineCard
+                key={timeline._id}
+                timelineOwner={timeline.owner._id === loggedUserId ? "loggedUser" : "collaborator"}
+                timeline={timeline}
+                onClickEditButton={() => openDrawerWithEditForm(timeline)}
+                handleClickOnDeleteButton={() => openDeleteModal(timeline)}
+                allUsers={usersData ?? []}
+              />
+            ))}
+          </TimelinesCardsContainer>
+        </Stack>
       </section>
       <section className="collaboration-timelines">
         <Typography variant="h3" component="h2">
