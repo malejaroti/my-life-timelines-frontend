@@ -143,16 +143,6 @@ function Navbar() {
 
           {isLoggedIn && (
             <li>
-              <NavLink to={'/timelinesList'}>
-                <Typography variant="h6" sx={navLinkStyles}>
-                  Timelines List
-                </Typography>
-              </NavLink>
-            </li>
-          )}
-
-          {isLoggedIn && (
-            <li>
               <NavLink to={'/timelines'}>
                 <Typography variant="h6" sx={navLinkStyles}>
                   Timelines
@@ -164,6 +154,11 @@ function Navbar() {
 
         {/* Right side of the navbar*/}
         <ul className='flex gap-6 items-center'>
+          {/* Add event button */}
+          {isLoggedIn &&
+          <Button variant='outlined' size='small'>Add event</Button>
+          }
+
           {/*  Logout button */}
           {isLoggedIn && (
             <Button variant='outlined' size='small' onClick={handleLogout}>
