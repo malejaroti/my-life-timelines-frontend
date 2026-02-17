@@ -1,6 +1,4 @@
-import React from 'react'
 import type { ITimelineItem } from '../pages/TimelineItemsPage';
-import TimelineItemCard from './TimelineItemCard';
 import formatDate from '../utils/formatDate';
 
 type CombinedLinearTimelineProps = {
@@ -17,7 +15,7 @@ function CombinedLinearTimeline({ items }: CombinedLinearTimelineProps) {
     // ))}
     // </div>
     <div className=" max-w-full flex overflow-x-scroll justify-evenly mt-5 lg:flex-row sm:flex-col max-h-[600px] rounded-md border-1 border-slate-200 p-2 ">
-        {items.reverse().map((timelineItem) => (
+        {[...items].reverse().map((timelineItem) => (
             <div key={timelineItem._id}>
                 <p className='text-[10px]'>{formatDate(timelineItem.endDate?timelineItem.endDate: timelineItem.startDate)}</p>
                 <p className='text-[12px] max-w-[100px]'>{timelineItem.title}</p>     

@@ -419,7 +419,7 @@ function LifeTimeline() {
                                                 key={index}
                                                 className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
                                             >
-                                                {tag}
+                                                {tag.name}
                                             </span>
                                         ))}
                                     </div>

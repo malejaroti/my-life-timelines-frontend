@@ -155,11 +155,12 @@ export default function ItemForm(props: ItemFormProps) {
       if (error instanceof AxiosError) {
         if (error.response && error.response.status >= 400 && error.response.status < 500) {
           setErrorMsgServer(error.response.data.errorMessage || "An error occurred during image upload. Please try again.");
+        } else {
+          // 5xx or no response (network error) — navigate to error page
           navigate('/error');
         }
       } else {
         // Handle non-axios errors
-        setErrorMsgServer("An unexpected error occurred during image upload. Please try again.");
         navigate('/error');
       }
     }
@@ -218,20 +219,19 @@ export default function ItemForm(props: ItemFormProps) {
       props.onSuccess(); // Close the drawer
     } catch (error) {
       console.log('Error response item creation: ', error);
-        if (error instanceof AxiosError) {
-          console.log("Axios error detected")
-          if (error.response && error.response.status >= 400 && error.response.status < 500) {
-            setErrorMsgServer(error.response.data.errorMessage);
-          }else{
-            navigate('/error'); // If it's not a 4xx error, navigate to error page
-          }
+      if (error instanceof AxiosError) {
+        console.log("Axios error detected")
+        if (error.response && error.response.status >= 400 && error.response.status < 500) {
+          setErrorMsgServer(error.response.data.errorMessage);
         } else {
-          // Handle non-axios errors
-          setErrorMsgServer("An unexpected error occurred. Please try again.");
-          navigate('/error');
+          navigate('/error'); // If it's not a 4xx error, navigate to error page
         }
-  };
-}
+      } else {
+        // Handle non-axios errors
+        navigate('/error');
+      }
+    }
+};
 
   const handleItemUpdate = async (event: React.FormEvent) => {
     event.preventDefault();
