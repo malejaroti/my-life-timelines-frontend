@@ -31,7 +31,7 @@ function App() {
           <Routes>
             <Route path="/timelines" element={<OnlyPrivate><TimelinesPage/></OnlyPrivate>} />
             <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
-            <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
+
             <Route path="/lifetimeline" element={<OnlyPrivate> <LifeTimeline /> </OnlyPrivate>} />
             <Route path="/user-profile" element={<OnlyPrivate> <UserProfilePage /> </OnlyPrivate>} />
             <Route path="/" element={<Home />} />
