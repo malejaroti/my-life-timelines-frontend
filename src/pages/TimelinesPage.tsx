@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import TimelineCard from '../components/TimelineCard';
 import Drawer from '@mui/material/Drawer';
-import AddButton from '../components/AddButton';
+
 import type { DrawerState, ITimelineItem } from './TimelineItemsPage';
 import TimelineForm from '../components/Forms/TimelineForm';
 import type { FormType } from '../components/Forms/ItemForm';
@@ -85,7 +85,12 @@ function TimelinesPage() {
     try {
       const response = await api.get('/items');
       // console.log("all timeline items", response)
-      setAllTimelineItems(response.data);
+      const sortedItems = [...response.data].sort(
+        (a: ITimelineItem, b: ITimelineItem) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      const latestTenItems = sortedItems.slice(0, 10);
+      setAllTimelineItems(latestTenItems);
     } catch (error) {
       console.log(error);
     }

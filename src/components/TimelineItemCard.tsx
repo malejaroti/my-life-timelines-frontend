@@ -1,5 +1,5 @@
 import { Delete, Edit } from "@mui/icons-material"
-import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material"
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material"
 import { type ITimelineItem } from "../pages/TimelineItemsPage"
 import formatDate from "../utils/formatDate"
 
