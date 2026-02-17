@@ -29,14 +29,9 @@ function App() {
         <main className="max-w-full flex-1 px-10 py-5 ">
           {/* <div className='central-section bb-black h-full w-[50%] m-auto'> */}
           <Routes>
-            <Route path="/timelines"
-              element={<OnlyPrivate> {' '}
-                <TimelinesPage />{' '}
-              </OnlyPrivate>
-              }
-            />
+            <Route path="/timelines" element={<OnlyPrivate><TimelinesPage/></OnlyPrivate>} />
             <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
-            <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
+
             <Route path="/lifetimeline" element={<OnlyPrivate> <LifeTimeline /> </OnlyPrivate>} />
             <Route path="/user-profile" element={<OnlyPrivate> <UserProfilePage /> </OnlyPrivate>} />
             <Route path="/" element={<Home />} />

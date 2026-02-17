@@ -1,48 +1,106 @@
 import { Delete, Edit } from "@mui/icons-material"
-import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material"
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material"
 import { type ITimelineItem } from "../pages/TimelineItemsPage"
+import formatDate from "../utils/formatDate"
 
 type TimelineItemCardProps = {
     timelineItem: ITimelineItem
-    callbackOnClickTrash: () => void
-    callbackOnClickEdit: () => void
+    callbackOnClickTrash?: () => void
+    callbackOnClickEdit?: () => void
 }
 
 function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickEdit }: TimelineItemCardProps) {
 
-    const formatDate = (dateStr?: string) => {
-        if (!dateStr) return '';
-        const formatted = new Intl.DateTimeFormat('en-GB', {
-            weekday: 'short',   // gives Mon, Tue, etc.
-            day: '2-digit',
-            month: '2-digit',
-            year: '2-digit'
-        }).format(new Date(dateStr));// e.g. "Mon, 07/10/25"
-        
-        const [weekdayPart, rest] = formatted.split(',', 2);
-        if (!rest) return weekdayPart; // fallback
-        const weekdayClean = weekdayPart.replace(/\.$/, ''); // avoid double dots
-        return `${weekdayClean}. ${rest.trim()}`;
-    }
-    const calculateDays = (startDate?: string, endDate?: string) => {
-        if (!startDate) return 0;
+    // Common utility function to calculate days between dates
+    const calculateDaysBetween = (startDate: string, endDate?: string): number => {
         const start = new Date(startDate);
-        const end = endDate ? new Date(endDate) : new Date();
-        const diffTime = Math.abs(end.getTime() - start.getTime());
-        const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // convert to days
-        const months = Math.floor(days / 30);
-        if (days <= 31) {
-            return days > 1 ? `${days} days` : ``;
+        const end = endDate ? new Date(endDate) : new Date(); // If no end date provided, means event is still ongoing, so use current date as end date
+        const diffTimeInMs = Math.abs(end.getTime() - start.getTime());
+        return Math.floor(diffTimeInMs / (1000 * 60 * 60 * 24)); // Dividing by 1000 to 
+    }
+
+    // Format duration (for events) - shows actual breakdown of time
+    const formatDuration = (days: number): string => {
+        if (days <= 1) {
+            return days === 1 ? '1 day' : '';
         }
-        return months > 1 ? `${days} days (${months} months)` : ``;
+        
+        if (days <= 31) {
+            return `${days} days`;
+        }
+        
+        const years = Math.floor(days / 365);
+        const remainingDaysAfterYears = days % 365;
+        const months = Math.floor(remainingDaysAfterYears / 30);
+        const remainingDays = remainingDaysAfterYears % 30;
+        
+        const parts = [];
+        if (years > 0) {
+            parts.push(years === 1 ? '1 year' : `${years} years`);
+        }
+        if (months > 0) {
+            parts.push(months === 1 ? '1 month' : `${months} months`);
+        }
+        if (remainingDays > 0) {
+            parts.push(remainingDays === 1 ? '1 day' : `${remainingDays} days`);
+        }
+        
+        return parts.join(', ');
+    }
+
+    // Format time period (for "time ago") - shows approximate months/years
+    const formatTimePeriod = (days: number): string => {
+        if (days <= 31) {
+            return days > 1 ? `${days} days` : days === 1 ? `${days} day` : '';
+        }
+        
+        const months = Math.floor(days / 30);
+        const years = Math.floor(months / 12);
+        
+        if (months <= 12) {
+            return months === 1 ? '1 month' : `${months} months`;
+        }
+
+        const remainingMonths = months % 12;
+        if (remainingMonths === 0) {
+            return years === 1 ? '1 year' : `${years} years`;
+        }
+        
+        return years === 1 
+            ? `1 year, ${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`
+            : `${years} years, ${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`;
+    }
+
+    const calculateEventDuration = (startDate: string, endDate?: string): string => {
+        if (!endDate || !startDate) return ''; // No duration if dates are missing
+        if (endDate === startDate) return ''; // No duration if is a one-day event
+        
+        const days = calculateDaysBetween(startDate, endDate) + 1; // +1 to include both start and end dates
+        return formatDuration(days)
+    }
+
+    const calculateDaysSinceStartDate = (startDate?: string, endDate?: string): string => {
+        if (!startDate) return '';
+        
+        const days = calculateDaysBetween(startDate);
+        const prefix = endDate === null || endDate === undefined ? "Started: " : " "; // Only show "Started" if the event is ongoing
+        const timePeriod = formatTimePeriod(days);
+        
+        if (days <= 31) {
+            return prefix + (days > 1 ? `${days} days ago` : `${days} day ago`);
+        }
+        
+        return prefix + timePeriod + ' ago';
     }
 
     const calculateAgeAtDate = (birthDateStr: string, targetDateStr: string) => {
         const birthDate = new Date(birthDateStr);
         const targetDate = new Date(targetDateStr);
         const ageInMilliseconds = targetDate.getTime() - birthDate.getTime();
+        const ageInMonths = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24 * 30.44));
         const ageInYears = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25));
-        return ageInYears;
+        const remainingMonths = ageInMonths % 12;
+        return ageInYears + " years" + (remainingMonths > 0 ? ` - ${remainingMonths}months` : '');
     }
 
     return (
@@ -52,14 +110,20 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 minWidth: 280,
                 position: 'relative',
                 display: 'flex',
-                padding:'20px 15px',
                 flexDirection: 'column',
+                padding:'20px 15px',
                 alignItems: 'center',
                 backgroundColor: '#e2e8f0',
                 // justifyContent: 'space-between'
                 // justifyContent: 'space-between'
-            }}  
+            }}
         >
+            {   
+                <Typography variant="body2" sx={{ color: 'text.secondary', marginBottom: '10px', fontSize: '0.7rem' }}>
+                    My age: {calculateAgeAtDate("12/16/1997",timelineItem.startDate )}
+                </Typography>
+            }
+
             {timelineItem.images.length !== 0 ?
                 // <CardMedia
                 //     component="img"
@@ -121,7 +185,7 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 flex: '1 1 auto',
                 // border:1,
             }} className="">
-                <Typography gutterBottom variant="h6" component="div" 
+                <Typography gutterBottom variant="h6" component="div"
                 sx={{ marginBottom: '2px', textAlign: 'center', lineHeight:'1' }}>
                     {timelineItem.title}
                 </Typography>
@@ -130,10 +194,12 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                         fontSize: '0.8rem',
                         color: 'text.secondary',
                         textAlign: 'center',
+                        paddingBottom: '8px',
+
                     }}>
                     {formatDate(timelineItem.startDate)}
-                    {timelineItem.startDate === timelineItem.endDate 
-                    ? "" 
+                    {timelineItem.startDate === timelineItem.endDate
+                    ? ""
                     : timelineItem.endDate
                         ? ` - ${formatDate(timelineItem.endDate)}
                           `
@@ -144,11 +210,24 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                     sx={{
                         fontSize: '0.8rem',
                         color: 'text.secondary',
-                        paddingBottom: '8px',
                         textAlign: 'center',
                         fontStyle: 'italic',
                     }}>
-                    {calculateDays(timelineItem.startDate, timelineItem.endDate)} 
+                    {calculateDaysSinceStartDate(timelineItem.startDate, timelineItem.endDate)}
+                </Typography>
+                <Typography variant="body2"
+                    sx={{
+                        fontSize: '0.8rem',
+                        color: 'text.secondary',
+                        textAlign: 'center',
+                        fontStyle: 'italic',
+                        paddingBottom: '8px',
+                    }}>
+                    {
+                        // Show duration only if endDate exists (i.e., not ongoing event)
+                        timelineItem.endDate &&
+                        `Duration: ${calculateEventDuration(timelineItem.startDate, timelineItem.endDate)}`
+                    }
                 </Typography>
                 <Typography variant="body2" sx={{
                     color: 'text.secondary',
@@ -164,6 +243,15 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 }}>
                     {timelineItem.description}
                 </Typography>
+                <Box sx={{ marginTop: '10px' }}>
+                    {timelineItem.tags.length === 0 ? null : (
+                        <div className='flex flex-wrap gap-1'>
+                            {timelineItem.tags.map(tag => (
+                                <span key={tag._id} className='inline-block  border-slate-100 border-[1px]  bg-blue-100 text-blue-800 text-[10px] px-2 py-1 rounded-full max-w-[100px] truncate'>{tag.name}</span>
+                            ))}
+                        </div>
+                    )}
+                </Box>
             </CardContent>
             <Box sx={{
                 display: 'flex',
@@ -201,11 +289,11 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 </IconButton>
 
             </Box>
-            <Box>
+            {/* <Box>
                 <Typography variant="body2" sx={{ color: 'text.secondary', position: 'absolute', top: 10, left: 10, fontSize: '0.7rem' }}>
-                    My age: {calculateAgeAtDate("12/16/1997",timelineItem.startDate )} yrs
+                    My age: {calculateAgeAtDate("12/16/1997",timelineItem.startDate )}
                 </Typography>
-            </Box>
+            </Box> */}
         </Card>
     )
 }

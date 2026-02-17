@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
 import SentimentVeryDissatisfied from "@mui/icons-material/SentimentVeryDissatisfied"
 import { useNavigate } from "react-router"
 
@@ -15,10 +16,15 @@ function ErrorPage() {
             <Typography variant="h3" >Oops!</Typography>
             <Typography variant="h5" color="gray">Sorry</Typography>
             <Typography variant="body1" sx={{mt:3, color:'gray'}}>There was an error in our server.</Typography>
-            
-            <Button  variant='contained' size="small" sx={{mt:3}} onClick={()=>{navigate("/")}} >
-                Go back Home
-            </Button>
+
+            <Stack direction="row" spacing={2} sx={{mt:3}}>
+                <Button variant='contained' size="small" onClick={()=>{navigate(-1)}} >
+                    Go back
+                </Button>
+                <Button variant='contained' size="small" onClick={()=>{navigate('/')}} >
+                    Go back Home
+                </Button>
+            </Stack>
             </div>
         </>
     )

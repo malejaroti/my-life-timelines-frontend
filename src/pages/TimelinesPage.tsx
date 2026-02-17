@@ -7,14 +7,16 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import TimelineCard from '../components/TimelineCard';
 import Drawer from '@mui/material/Drawer';
-import AddButton from '../components/AddButton';
-import type { DrawerState } from './TimelineItemsPage';
+
+import type { DrawerState, ITimelineItem } from './TimelineItemsPage';
 import TimelineForm from '../components/Forms/TimelineForm';
 import type { FormType } from '../components/Forms/ItemForm';
 import { AuthContext } from '../context/auth.context';
 import DeleteModal from '../components/DeleteModal';
 import { TimelinesCardsContainer } from '../components/styled/CardsContainer'
 import type { IUser } from './UserProfilePage';
+import CombinedLinearTimeline from '../components/CombinedLinearTimeline';
+import { BoxTimelinesList } from '../components/styled/BoxTimelinesPage';
 export interface ITimeline {
   _id: string;
   owner: IUser;
@@ -44,10 +46,11 @@ export type TimelineCreatePayload = {
 function TimelinesPage() {
   const authContext = useContext(AuthContext);
   if (!authContext) {
-    throw new Error('Timeline creation must be done within an AuthWrapper');
+    throw new Error('Timelines must be accessed within an AuthWrapper');
   }
   const { loggedUserId } = authContext;
   const [userTimelines, setUserTimelines] = useState<ITimeline[]>([]);
+  const [allTimelineItems, setAllTimelineItems] = useState<ITimelineItem[]>([]);
   const [collaborationTimelines, setCollaborationTimelines] = useState<ITimeline[]>([]);
   const [selectedTimeline, setSelectedTimeline] = useState<ITimeline | null>(null);
   const [formType, setFormType] = useState<FormType>(null);
@@ -61,6 +64,7 @@ function TimelinesPage() {
 
 
   useEffect(() => {
+    getAllTimelineItemsCurrentYear();
     getUserTimelines();
     getCollaborationTimelines();
     getUsersData();
@@ -72,6 +76,21 @@ function TimelinesPage() {
       const response = await api.get('/timelines');
       // console.log("user timelines", response)
       setUserTimelines(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllTimelineItemsCurrentYear = async () => {
+    try {
+      const response = await api.get('/items');
+      // console.log("all timeline items", response)
+      const sortedItems = [...response.data].sort(
+        (a: ITimelineItem, b: ITimelineItem) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      const latestTenItems = sortedItems.slice(0, 10);
+      setAllTimelineItems(latestTenItems);
     } catch (error) {
       console.log(error);
     }
@@ -169,20 +188,67 @@ function TimelinesPage() {
             </Button>
           </Stack>
         </Box>
+        <Box>
+          <CombinedLinearTimeline items={allTimelineItems} />
+        </Box>
+        
+        {/* Container for timelines list (left) and timelines container(right) */}
+        <Stack direction="row" spacing={2}
+          sx={{ pt: 3 }}
+        >
+          {/* Left - Timelines list */}
+          <Stack spacing={2}> 
+            <Box
+              sx={{    
+                border: '1px solid',
+                borderRadius: 1, // rounded-md
+                borderColor: 'grey.300', // border-slate-200
+                width:'fit-content', 
+                p:2, 
+                height: 'fit-content', 
+                flexShrink: 0
+              }}>
+              <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>MY OWN TIMELINES</Typography>
+              {userTimelines.map((timeline, index) => (
+                <Typography
+                  key={timeline._id}
+                  variant="body1"
+                  component="p"
+                  sx={{ mb: 1, whiteSpace: 'nowrap' }}
+                >
+                  {index+1 + ". " + timeline.title}
+                </Typography>
+              ))}
+            </Box>
+            <BoxTimelinesList>
+              <Typography sx={{ fontWeight: 'bold' }}>Collaboration timelines</Typography>
+              {collaborationTimelines.map((timeline, index) => (
+                <Typography
+                  key={timeline._id}
+                  variant="body1"
+                  component="p"
+                  sx={{ mb: 1, whiteSpace: 'nowrap' }}
+                >
+                  {index+1 + ". " + timeline.title}
+                </Typography>
+              ))}
+            </BoxTimelinesList>
+          </Stack>
 
-        <TimelinesCardsContainer>
-          {userTimelines.map((timeline) => (
-            // {console.log(timeline)}
-            <TimelineCard
-              key={timeline._id}
-              timelineOwner={timeline.owner._id === loggedUserId ? "loggedUser" : "collaborator"}
-              timeline={timeline}
-              onClickEditButton={() => openDrawerWithEditForm(timeline)}
-              handleClickOnDeleteButton={() => openDeleteModal(timeline)}
-              allUsers={usersData ?? []}
-            />
-          ))}
-        </TimelinesCardsContainer>
+          <TimelinesCardsContainer>
+            {userTimelines.map((timeline) => (
+              // {console.log(timeline)}
+              <TimelineCard
+                key={timeline._id}
+                timelineOwner={timeline.owner._id === loggedUserId ? "loggedUser" : "collaborator"}
+                timeline={timeline}
+                onClickEditButton={() => openDrawerWithEditForm(timeline)}
+                handleClickOnDeleteButton={() => openDeleteModal(timeline)}
+                allUsers={usersData ?? []}
+              />
+            ))}
+          </TimelinesCardsContainer>
+        </Stack>
       </section>
       <section className="collaboration-timelines">
         <Typography variant="h3" component="h2">

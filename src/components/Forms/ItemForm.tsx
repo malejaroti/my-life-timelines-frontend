@@ -1,3 +1,6 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+// MUI imports
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
@@ -6,26 +9,25 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import TextField from "@mui/material/TextField";
-// import FormGroup from "@mui/material/FormGroup";
-// import PhotoCamera from "@mui/icons-material/PhotoCamera";
+// React-Select imports
+import CreatableSelect from 'react-select/creatable';
+import makeAnimated from 'react-select/animated';
+// Custom components and context imports
 import { FormContainer, FormGrid, FormHeader } from './FormSubcomponents/FormStyledSubcomponents';
-
-import React, { useContext, useState } from 'react';
-import type {
-  ITimelineItem,
-  TimelineItemCreateDTO,
-} from '../../pages/TimelineItemsPage';
 import { AuthContext } from '../../context/auth.context';
 import ImageUploader from '../ImageUploader';
 import api from '../../services/config.services';
-import { useNavigate } from 'react-router';
 import dayjs, { Dayjs } from 'dayjs';
 import { responsiveStyles } from '../../shared-theme/themePrimitives';
-import { FormControl } from '@mui/material';
+import type { ITimelineItem, TimelineItemCreateDTO} from '../../pages/TimelineItemsPage';
+import type { ITag, SelectOption } from '../../types/index';
+import type { MultiValue, ActionMeta } from 'react-select';
+import { Alert } from '@mui/material';
+import { AxiosError } from 'axios';
 
 export type FormType = 'edit' | 'create' | null; //union
 
@@ -33,6 +35,7 @@ export type FormType = 'edit' | 'create' | null; //union
 type ItemFormProps =
   | { formType: 'create'; timelineId: string; item?: never; onSuccess: () => void; onRefresh: () => void; onCancel: () => void }
   | { formType: 'edit'; item: ITimelineItem; timelineId: string; onSuccess: () => void; onRefresh: () => void; onCancel: () => void };
+
 
 export default function ItemForm(props: ItemFormProps) {
   const authContext = useContext(AuthContext);
@@ -59,7 +62,7 @@ export default function ItemForm(props: ItemFormProps) {
       ? { ...props.item }
       : { ...defaultFormData }
   );
-  // console.log("props.item: ", props.item)
+  console.log("props.item: ", props.item)
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false); // for a loading animation effect while image uploads to cloudinary and URL is generated
   const [startDateValue, setStartDateValue] = useState<Dayjs | null>(
@@ -77,10 +80,34 @@ export default function ItemForm(props: ItemFormProps) {
       ? props.item.startDate === props.item.endDate
       : false
   );
-  const [ongoingEvent, setOngoingEvent] = useState(
+  const [ongoingEvent, setOngoingEvent] = useState( 
     props.formType === 'edit' && props.item?.endDate === ''
   );
   const navigate = useNavigate();
+  const [tagsForTimelineItems, setTagsForTimelineItems] = useState<ITag[]>([])
+  const [selectedTags, setSelectedTags] = useState<SelectOption[]>(    
+    props.formType === 'edit' && props.item && props.item.tags && props.item.tags.length > 0
+      ? props.item.tags.map((tag: ITag) => ({ value: tag.name, label: tag.name, id: tag._id }))
+      : []
+    )
+  const animatedComponents = makeAnimated();
+  const requiredFieldsFilled = formData.title.trim() !== '' && startDateValue !== null;
+  const [errorMsgServer, setErrorMsgServer] = useState(""); //state for server error messages
+
+  useEffect(() => {
+    getTags()
+  }, [])
+  const getTags = async () => {
+    try {
+      const response = await api.get("/tags")
+      setTagsForTimelineItems(response.data)
+      // console.log("tagsForTimelineItems: ", response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const options: SelectOption[] = tagsForTimelineItems.map((tag) => ({ value: tag.name, label: tag.name, id:tag._id }));
 
   const datePickerSlotProps = {
       popper: {
@@ -95,7 +122,7 @@ export default function ItemForm(props: ItemFormProps) {
       textField: { fullWidth: true }
   };
   const handleFormDataChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement >
   ) => {
     const { name, value } = event.currentTarget;
     setFormData((prev) => ({
@@ -103,6 +130,9 @@ export default function ItemForm(props: ItemFormProps) {
       [name]: value,
     }));
   };
+  const handleTagsSelection = (newValue: MultiValue<SelectOption>) => {
+    setSelectedTags([...newValue]);
+  }
 
   const handleFileUpload = async (file: File) => {
     console.log('The file to be uploaded is: ', file);
@@ -120,14 +150,23 @@ export default function ItemForm(props: ItemFormProps) {
       // Return the image URL instead of updating state here
       return response.data.imageUrl;
     } catch (error) {
-      setIsUploading(false);
-      navigate('/error');
-      throw error; // Re-throw to handle in handleSubmit
+      console.error('Error while uploading the image: ', error);
+      setIsUploading(false); // to stop the loading animation
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status >= 400 && error.response.status < 500) {
+          setErrorMsgServer(error.response.data.errorMessage || "An error occurred during image upload. Please try again.");
+          navigate('/error');
+        }
+      } else {
+        // Handle non-axios errors
+        setErrorMsgServer("An unexpected error occurred during image upload. Please try again.");
+        navigate('/error');
+      }
     }
   };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     let uploadedImageUrl = null;
 
     // Wait for file upload to complete before creating the item
@@ -145,6 +184,10 @@ export default function ItemForm(props: ItemFormProps) {
       ? [...formData.images, uploadedImageUrl]
       : formData.images;
 
+    console.log("selectedTags: ", selectedTags)
+    const finalTags = selectedTags.map(tag => tag.id ? { _id: tag.id } : { name: tag.value });
+    console.log("finalTags: ", finalTags)
+
     const newItem = {
       ...formData,
       startDate: startDateValue ? startDateValue.format('YYYY-MM-DD') : '',
@@ -153,14 +196,15 @@ export default function ItemForm(props: ItemFormProps) {
           ? startDateValue.format('YYYY-MM-DD')
           : ''
         : ongoingEvent
-          ? '' // Ongoing events have no end date
+          ? null // Ongoing events have no end date
           : endDateValue
             ? endDateValue.format('YYYY-MM-DD')
             : '',
       images: finalImages, // Use the final images array
+      tags: finalTags,
       impact: 'positive',
     };
-    console.log('new item: ', newItem);
+    // console.log('new item: ', newItem);
 
     try {
       const response = await api.post(
@@ -173,9 +217,21 @@ export default function ItemForm(props: ItemFormProps) {
       props.onRefresh(); // Refresh the timeline items
       props.onSuccess(); // Close the drawer
     } catch (error) {
-      navigate('/error');
-    }
+      console.log('Error response item creation: ', error);
+        if (error instanceof AxiosError) {
+          console.log("Axios error detected")
+          if (error.response && error.response.status >= 400 && error.response.status < 500) {
+            setErrorMsgServer(error.response.data.errorMessage);
+          }else{
+            navigate('/error'); // If it's not a 4xx error, navigate to error page
+          }
+        } else {
+          // Handle non-axios errors
+          setErrorMsgServer("An unexpected error occurred. Please try again.");
+          navigate('/error');
+        }
   };
+}
 
   const handleItemUpdate = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -254,6 +310,7 @@ export default function ItemForm(props: ItemFormProps) {
               placeholder="Title"
               autoComplete="item title"
               required
+              // error={formData.title.trim() === ''}
               fullWidth
               size="small"
               sx={responsiveStyles.formInput}
@@ -281,9 +338,31 @@ export default function ItemForm(props: ItemFormProps) {
               onChange={handleFormDataChange}
             />
           </FormGrid>
-          {/* <div>
-          
-        </div> */}
+          <FormGrid size={{ xs: 12 }} >
+            <FormLabel htmlFor="tags" sx={responsiveStyles.formLabel}>
+                Tags
+            </FormLabel>
+            {/* <OutlinedInput
+                id="tags"
+                name="tags"
+                type="tags"
+                placeholder=""
+                size="small" //makes the placeholder look closer to the top border of the input
+                sx={responsiveStyles.formInput}
+                value={formData.tags}
+                onChange={handleFormDataChange}
+            /> */}
+            <CreatableSelect
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={options}
+              value={selectedTags}
+              onChange={handleTagsSelection}
+              className="mb-3"
+            />
+          </FormGrid>
+
           <FormGrid className=''>
             <FormLabel htmlFor="start-date" required sx={responsiveStyles.formLabel}>
               {oneDayEvent ? 'Date' : ongoingEvent ? 'Start Date (ongoing)' : 'Start Date'}
@@ -378,6 +457,7 @@ export default function ItemForm(props: ItemFormProps) {
             Cancel
           </Button>
           <Button
+            // disabled={!requiredFieldsFilled || isUploading}
             variant="contained"
             type="submit"
             size="medium"
@@ -387,6 +467,14 @@ export default function ItemForm(props: ItemFormProps) {
             {props.formType === 'create' ? 'Create item' : 'Save changes'}
           </Button>
         </Box>
+        {errorMsgServer !== "" && (
+            <Alert 
+            severity="error"
+            onClose={() => setErrorMsgServer("")}
+            >
+            An error occurred in the item creation. {errorMsgServer}. Please verify the fields and try again.
+            </Alert>
+        )}
       </FormContainer>
     </>
   );
