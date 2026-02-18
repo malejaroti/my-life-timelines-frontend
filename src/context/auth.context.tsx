@@ -35,7 +35,6 @@ function AuthWrapper(props: AuthWrapperProps) {
       const response = await api.get('/auth/verify');
 
       // if we get to this point it means that the backend validated the token
-      console.log(response);
       setIsLoggedIn(true);
       setLoggedUserId(response.data._id);
       setIsAuthenticating(false);

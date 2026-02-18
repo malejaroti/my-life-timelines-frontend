@@ -118,7 +118,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     try {
       const response = await api.post('/auth/signup', newUser);
-      console.log(response);
       navigate('/sign-in');
 
     } catch (error: any) {

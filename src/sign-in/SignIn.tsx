@@ -61,21 +61,13 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       event.preventDefault();
       return;
     }
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
 
     const userCredentials = {
       email: formData.email,
       password: formData.password,
     };
-    console.log('user credentials', userCredentials); //TODO: Delete later
-
     try {
       const response = await api.post('/auth/login', userCredentials);
-      console.log('login response', response);
       if(response.status === 200){
         setServerErrorMsg("")
       }
