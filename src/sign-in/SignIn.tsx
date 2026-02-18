@@ -58,24 +58,16 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (emailError || passwordError) {
-      event.preventDefault();
+
       return;
     }
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
 
     const userCredentials = {
       email: formData.email,
       password: formData.password,
     };
-    console.log('user credentials', userCredentials); //TODO: Delete later
-
     try {
       const response = await api.post('/auth/login', userCredentials);
-      console.log('login response', response);
       if(response.status === 200){
         setServerErrorMsg("")
       }
