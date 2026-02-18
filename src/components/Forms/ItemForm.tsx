@@ -87,7 +87,7 @@ export default function ItemForm(props: ItemFormProps) {
   const [tagsForTimelineItems, setTagsForTimelineItems] = useState<ITag[]>([])
   const [selectedTags, setSelectedTags] = useState<SelectOption[]>(    
     props.formType === 'edit' && props.item && props.item.tags && props.item.tags.length > 0
-      ?   props.item.tags.map((tag: ITag) => ({ value: tag.name, label: tag.name, _id: tag._id}))
+      ? props.item.tags.map((tag: ITag) => ({ value: tag.name, label: tag.name, id: tag._id }))
       : []
     )
   const animatedComponents = makeAnimated();

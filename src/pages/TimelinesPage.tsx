@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import TimelineCard from '../components/TimelineCard';
 import Drawer from '@mui/material/Drawer';
-import AddButton from '../components/AddButton';
+
 import type { DrawerState, ITimelineItem } from './TimelineItemsPage';
 import TimelineForm from '../components/Forms/TimelineForm';
 import type { FormType } from '../components/Forms/ItemForm';

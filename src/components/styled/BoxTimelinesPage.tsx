@@ -11,10 +11,10 @@ import { styled } from "@mui/material/styles";
 //     height: 'fit-content', 
 //     flexShrink: 0
 // }));
-export const BoxTimelinesList = styled(Box)(({ }) => ({
+export const BoxTimelinesList = styled(Box)(({ theme }) => ({
     border: '1px solid',
     borderRadius: '8px',
-    borderColor: 'grey.300',
+    borderColor: theme.palette.grey[300],
     width: 'fit-content', 
     padding: '16px', 
     height: 'fit-content', 

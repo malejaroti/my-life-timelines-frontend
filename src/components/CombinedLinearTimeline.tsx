@@ -1,6 +1,4 @@
-import React from 'react'
 import type { ITimelineItem } from '../pages/TimelineItemsPage';
-import TimelineItemCard from './TimelineItemCard';
 import formatDate from '../utils/formatDate';
 
 type CombinedLinearTimelineProps = {
