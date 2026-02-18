@@ -154,10 +154,10 @@ function Navbar() {
 
         {/* Right side of the navbar*/}
         <ul className='flex gap-6 items-center'>
-          {/* Add event button */}
+          {/* Add event button
           {isLoggedIn &&
           <Button variant='outlined' size='small'>Add event</Button>
-          }
+          } */}
 
           {/*  Logout button */}
           {isLoggedIn && (
