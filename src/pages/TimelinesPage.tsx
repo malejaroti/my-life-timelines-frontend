@@ -64,7 +64,7 @@ function TimelinesPage() {
 
 
   useEffect(() => {
-    getAllTimelineItemsCurrentYear();
+    getXMostRecentTimelineItems();
     getUserTimelines();
     getCollaborationTimelines();
     getUsersData();
@@ -74,40 +74,36 @@ function TimelinesPage() {
   const getUserTimelines = async () => {
     try {
       const response = await api.get('/timelines');
-      // console.log("user timelines", response)
       setUserTimelines(response.data);
     } catch (error) {
-      console.log(error);
+      navigate('/error');
     }
   };
 
-  const getAllTimelineItemsCurrentYear = async () => {
+  const getXMostRecentTimelineItems = async () => {
     try {
-      const response = await api.get('/items');
-      // console.log("all timeline items", response)
+      const response = await api.get('/items?limit=10');
       setAllTimelineItems(response.data);
     } catch (error) {
-      console.log(error);
+      navigate('/error');
     }
   };
 
   const getCollaborationTimelines = async () => {
     try {
       const response = await api.get('/timelines/collaborations');
-      // console.log('timelines collaborations', response);
       setCollaborationTimelines(response.data);
     } catch (error) {
-      console.log(error);
+      navigate('/error');
     }
   };
 
   const getUsersData = async () => {
     try {
       const response = await api.get('/users');
-      console.log("All users data", response)
       setUsersData(response.data);
     } catch (error) {
-      console.log(error);
+      navigate('/error');
     }
   };
   const openDeleteModal = useCallback((timeline: ITimeline) => {
@@ -137,7 +133,6 @@ function TimelinesPage() {
   const handleTimelineDelete = async () => {
     try {
       const response = await api.delete(`/timelines/${selectedTimeline?._id}`);
-      console.log('Res DELETE item: ', response);
       getUserTimelines()
       setOpenModal(false)
     } catch (error) {
@@ -232,7 +227,6 @@ function TimelinesPage() {
 
           <TimelinesCardsContainer>
             {userTimelines.map((timeline) => (
-              // {console.log(timeline)}
               <TimelineCard
                 key={timeline._id}
                 timelineOwner={timeline.owner._id === loggedUserId ? "loggedUser" : "collaborator"}
