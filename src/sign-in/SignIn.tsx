@@ -58,7 +58,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (emailError || passwordError) {
-      event.preventDefault();
+
       return;
     }
 

@@ -64,7 +64,7 @@ function TimelinesPage() {
 
 
   useEffect(() => {
-    getXMostRecentTimelineItems();
+    getXMostRecentTimelineItems(10);
     getUserTimelines();
     getCollaborationTimelines();
     getUsersData();
@@ -80,9 +80,9 @@ function TimelinesPage() {
     }
   };
 
-  const getXMostRecentTimelineItems = async () => {
+  const getXMostRecentTimelineItems = async (itemsToGet: number) => {
     try {
-      const response = await api.get('/items?limit=10');
+      const response = await api.get(`/items?limit=${itemsToGet}`);
       setAllTimelineItems(response.data);
     } catch (error) {
       navigate('/error');
@@ -133,8 +133,8 @@ function TimelinesPage() {
   const handleTimelineDelete = async () => {
     try {
       const response = await api.delete(`/timelines/${selectedTimeline?._id}`);
-      getUserTimelines()
-      setOpenModal(false)
+      getUserTimelines();
+      setOpenModal(false);
     } catch (error) {
       navigate('/error');
     }
