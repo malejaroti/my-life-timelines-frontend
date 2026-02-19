@@ -25,6 +25,8 @@ import {
     Instagram as InstagramIcon
 } from '@mui/icons-material';
 import heroImage from '../assets/hero_helper_image.png';
+import CombinedVisTimeline from '../components/vis-timeline/CombinedVisTimeline';
+import { demoTimelinesWithItems } from '../assets/data/demoTimelineData';
 
 function Home() {
     const theme = useTheme();
@@ -81,7 +83,7 @@ function Home() {
             <Box
                 sx={{
                     background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)',
-                    minHeight: '70vh',
+                    minHeight: '40vh',
                     position: 'relative',
                     display: 'flex',
                     alignItems: 'center',
@@ -97,12 +99,12 @@ function Home() {
                                     component="h1"
                                     sx={{
                                         fontWeight: 'bold',
-                                        fontSize: { xs: '2.5rem', md: '3.5rem' },
+                                        fontSize: { xs: '2.5rem', md: '2.5rem' },
                                         lineHeight: 1.1,
                                         color: 'white'
                                     }}
                                 >
-                                    A single place to see your whole life's story unfold
+                                    Create a <Box component="span" sx={{ fontWeight: 'bold', color: '#facc15' }}>Visual Timeline</Box> of anything in your life 
                                 </Typography>
 
                                 <Typography
@@ -139,7 +141,7 @@ function Home() {
                                             transition: 'all 0.3s ease'
                                         }}
                                     >
-                                        {isLoggedIn ? 'Go to Your Timeline' : 'Start Your Timeline'}
+                                        {isLoggedIn ? 'Go to Your Timeline' : 'Create your own'}
                                     </Button>
                                 </Box>
                             </Stack>
@@ -162,6 +164,20 @@ function Home() {
                         filter: 'blur(100px)',
                         zIndex: 1
                     }}
+                />
+            </Box>
+                <Box sx={{ 
+                width: '100%', 
+                maxWidth: '1200px',
+                // px: { xs: 1, sm: 2, md: 3 },  // responsive padding
+                mx: 'auto',
+                border: 1,
+                // minHeight: '300px',
+                }}>
+                <CombinedVisTimeline 
+                    timelinesWithItems={demoTimelinesWithItems} 
+                    windowStart={new Date('2021-01-01')}
+                    windowEnd={new Date()}
                 />
             </Box>
 

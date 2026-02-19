@@ -47,3 +47,35 @@
   gap: 2rem;
   margin-top: 1.25rem;
 }
+.vis-item-content{
+  white-space: wrap;
+  max-width: 30px;
+  overflow-x: wrap;
+  /* background-color: blueviolet; */
+}
+.vis-item .vis-item-content{
+  white-space: wrap !important;
+}
+/* .vis-group-level-0{
+  background-color: blue;
+} */
+.vis-item {
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+}
+.vis-inner {
+  font-family: 'Roboto', sans-serif;
+  word-break: break-word;
+}
+.vis-label {
+  /* background-color: red; */
+  max-width: 120px;
+  border: none;
+}
+/* .vis-labelset {
+  color: yellowgreen;
+  background-color: yellow;
+  gap:0;
+  margin: 0;
+  box-shadow: none;
+} */
