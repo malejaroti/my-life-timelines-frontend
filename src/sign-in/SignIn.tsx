@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import api from '../services/config.services';
 import { AuthContext } from '../context/auth.context';
 import { useNavigate } from 'react-router';
-import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
+import { SignContainer, CardForSignContainer } from '../components/styled/Styled_AuthForms';
 import { Alert } from '@mui/material';
 import Link from '@mui/material/Link';
 import Divider from '@mui/material/Divider';
@@ -183,7 +183,7 @@ export default function SignIn() {
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 component="button"
                 type="button"

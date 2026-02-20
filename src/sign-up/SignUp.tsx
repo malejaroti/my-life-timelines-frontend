@@ -17,7 +17,7 @@ import Alert from '@mui/material/Alert';
 import Link from '@mui/material/Link';
 import Divider from '@mui/material/Divider';
 
-import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
+import { SignContainer, CardForSignContainer } from '../components/styled/Styled_AuthForms';
 
 export default function SignUp() {
   const [emailError, setEmailError] = useState(false);
