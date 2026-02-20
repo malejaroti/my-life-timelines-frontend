@@ -15,7 +15,7 @@ import { AuthContext } from '../context/auth.context';
 import DeleteModal from '../components/DeleteModal';
 import { TimelinesCardsContainer } from '../components/styled/CardsContainer'
 import type { IUser } from './UserProfilePage';
-import CombinedLinearTimeline from '../components/CombinedLinearTimeline';
+import CombinedLinearTimeline from '../components/RecentEventsLinearTimeline';
 import { BoxTimelinesList } from '../components/styled/BoxTimelinesPage';
 export interface ITimeline {
   _id: string;
