@@ -145,6 +145,7 @@ export default function SignUp() {
             <FormControl>
               <FormLabel htmlFor="name">Full name</FormLabel>
               <TextField
+                autoFocus
                 autoComplete="name"
                 name="name"
                 required
