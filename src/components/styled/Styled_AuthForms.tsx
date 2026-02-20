@@ -15,7 +15,7 @@ import MuiCard from '@mui/material/Card';
 export const SignContainer = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
-  minHeight: '100dvh',
+  minHeight: '100%',
   padding: theme.spacing(2),
   paddingTop: 'clamp(16px, 5vh, 48px)',
   [theme.breakpoints.up('sm')]: {
