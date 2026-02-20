@@ -4,7 +4,7 @@ import SignUp from './sign-up/SignUp.tsx';
 import SignIn from './sign-in/SignIn.tsx';
 
 // import BorderBox from './components/BorderBox'
-// import Footer from './components/Footer'
+import Footer from './components/Footer'
 // import Navbar from './components/layout/Navbar.tsx';
 import OnlyPrivate from './components/OnlyPrivate.tsx';
 import TimelinesPage from './pages/TimelinesPage.tsx';
@@ -55,8 +55,7 @@ function App() {
             <main className='w-full flex-1 bb'>
             </main>
           </BorderBox> */}
-        {/* <Footer/> */}
-        {/* <footer className="w-full h-[60px] bb-black"></footer> */}
+        <Footer />
       </div>
       {/* Main page */}
       {/* Footer */}
