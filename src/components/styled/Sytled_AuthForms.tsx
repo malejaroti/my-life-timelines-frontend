@@ -2,14 +2,23 @@ import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import MuiCard from '@mui/material/Card';
 
-
-
+/**
+ * SignContainer is a full-page layout wrapper for the sign-in and sign-up forms.
+ *
+ * - Aligns the form card to the top (`flex-start`) with a fixed `paddingTop`
+ *   so both pages start at the same vertical position (no visual jump).
+ * - The `::before` pseudo-element renders a subtle full-screen background
+ *   gradient (light blue → white in light mode, dark blue in dark mode).
+ */
 export const SignContainer = styled(Stack)(({ theme }) => ({
-  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-  minHeight: '100%',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  minHeight: '100dvh',
   padding: theme.spacing(2),
+  paddingTop: '15vh',
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(4),
+    paddingTop: '15vh',
   },
   '&::before': {
     content: '""',
@@ -30,11 +39,11 @@ export const SignContainer = styled(Stack)(({ theme }) => ({
 export const CardForSignContainer = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignSelf: 'center',
+  justifyContent: 'flex-start',
   width: '100%',
   padding: theme.spacing(4),
   gap: theme.spacing(2),
-  margin: 'auto',
+  margin: '0 auto',
   [theme.breakpoints.up('sm')]: {
     maxWidth: '450px',
   },

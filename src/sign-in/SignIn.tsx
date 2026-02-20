@@ -10,6 +10,9 @@ import { AuthContext } from '../context/auth.context';
 import { useNavigate } from 'react-router';
 import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
 import { Alert } from '@mui/material';
+import Link from '@mui/material/Link';
+import Divider from '@mui/material/Divider';
+
 
 export default function SignIn() {
   const authContext = React.useContext(AuthContext);
@@ -100,7 +103,7 @@ export default function SignIn() {
   };
 
   return (
-      <SignContainer direction="column" justifyContent="space-between">
+      <SignContainer direction="column">
         <CardForSignContainer variant="outlined">
           <Typography
             component="h1"
@@ -174,6 +177,23 @@ export default function SignIn() {
                 </Alert>
               : null
             }
+          </Box>
+          <Divider>
+            <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+          </Divider>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography sx={{ textAlign: 'center' }}>
+              Don't have an account?{' '}
+              <Link
+                component="button"
+                type="button"
+                onClick={() => navigate('/sign-up')}
+                variant="body2"
+                sx={{ alignSelf: 'center' }}
+              >
+                Sign up
+              </Link>
+            </Typography>
           </Box>
         </CardForSignContainer>
       </SignContainer>

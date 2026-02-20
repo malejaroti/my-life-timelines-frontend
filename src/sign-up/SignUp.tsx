@@ -14,6 +14,9 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
+import Link from '@mui/material/Link';
+import Divider from '@mui/material/Divider';
+
 import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
 
 export default function SignUp() {
@@ -124,7 +127,7 @@ export default function SignUp() {
   };
 
   return (
-      <SignContainer direction="column" justifyContent="space-between">
+      <SignContainer direction="column">
         <CardForSignContainer variant="outlined">
           {/* <SitemarkIcon /> */}
           <Typography
@@ -215,6 +218,23 @@ export default function SignUp() {
             ? <Alert severity="error"> {serverErrorMessage}  </Alert>
             : null
           }
+          <Divider>
+            <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+          </Divider>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography sx={{ textAlign: 'center' }}>
+              Already have an account?{' '}
+              <Link
+                component="button"
+                type="button"
+                onClick={() => navigate('/sign-in')}
+                variant="body2"
+                sx={{ alignSelf: 'center' }}
+              >
+                Sign in
+              </Link>
+            </Typography>
+          </Box>
         </CardForSignContainer>
       </SignContainer>
   );
