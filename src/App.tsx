@@ -36,7 +36,7 @@ function App() {
             <Route path="/user-profile" element={<OnlyPrivate> <UserProfilePage /> </OnlyPrivate>} />
             <Route path="/" element={<Home />} />
             <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/sign-in" element={<SignIn disableCustomTheme={false} />} />
+            <Route path="/sign-in" element={<SignIn />} />
 
             <Route path="/error" element={<ErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
