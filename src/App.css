@@ -47,9 +47,20 @@
   gap: 2rem;
   margin-top: 1.25rem;
 }
+.vis-timeline.vis-bottom.vis-ltr {
+  border-left: none;
+  border-right: none;
+}
+.vis-label.vis-group-level-0 {
+  border-left-width: 0 !important;
+}
+.vis-panel.vis-top{
+  border-left-width: 0 !important;
+  border-left-style: none !important;
+}
 .vis-item-content{
   white-space: wrap;
-  max-width: 30px;
+  /* max-width: 50px; */
   overflow-x: wrap;
   /* background-color: blueviolet; */
 }

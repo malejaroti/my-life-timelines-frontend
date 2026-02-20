@@ -16,9 +16,10 @@ type CombinedVisTimelineProps = {
     timelinesWithItems: ITimelineWithItems[]
     windowStart?: Date;
     windowEnd?: Date;
+    imageVisibility?: boolean;
 }
 
-function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd }: CombinedVisTimelineProps) {
+function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd, imageVisibility }: CombinedVisTimelineProps) {
 
     const masterTimelineContainerRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<VisTimeline | null>(null);
@@ -26,11 +27,19 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd }: Com
     const itemsViewRef = useRef<VisDataView<VisTimelineItem> | null>(null);
     const groupsDSRef = useRef<VisDataSet<VisDataGroup> | null>(null);
     const currentWindowRef = useRef<{ start: Date; end: Date } | null>(null);
-    const imageItemsVisibility = true; // Set to true to show images in items
+    const imageItemsVisibility = imageVisibility ?? false; // Set to true to show images in items
 
     useEffect(() => {
             if (!masterTimelineContainerRef.current) return;
             if (!timelinesWithItems || timelinesWithItems.length === 0) return;
+
+            // Destroy previous instance to avoid appending a new timeline on top of the old one
+            if (timelineRef.current) {
+                timelineRef.current.destroy();
+                timelineRef.current = null;
+            }
+
+            console.log("Received timelinesWithItems in CombinedVisTimeline:", timelinesWithItems);
     
             // Create visTimelineItems - flatten all items from all timelines
             const visTimelineItems: VisTimelineItem[] = timelinesWithItems.flatMap((timeline, timelineIndex) =>
@@ -116,7 +125,8 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd }: Com
     
     return (
         <div
-            className="master-timeline flex-1 bg-gray-100 rounded-lg"
+            // className="master-timeline flex-1 bg-gray-100 rounded-lg"
+            className="border-none outline-none focus:ring-0 focus:outline-none focus:border-none mx-5"
             ref={masterTimelineContainerRef}
             style={{ height: 'auto' }}
         >    
