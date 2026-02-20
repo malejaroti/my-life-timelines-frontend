@@ -29,6 +29,28 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd, image
     const currentWindowRef = useRef<{ start: Date; end: Date } | null>(null);
     const imageItemsVisibility = imageVisibility ?? false; // Set to true to show images in items
 
+    // Enable zoom only when user clicks inside the timeline, disable when clicking outside
+    useEffect(() => {
+        const container = masterTimelineContainerRef.current;
+        if (!container) return;
+
+        const handleClickInside = () => {
+            timelineRef.current?.setOptions({ zoomKey: '' });
+        };
+        const handleClickOutside = (e: MouseEvent) => {
+            if (!container.contains(e.target as Node)) {
+                timelineRef.current?.setOptions({ zoomKey: 'ctrlKey' });
+            }
+        };
+
+        container.addEventListener('click', handleClickInside);
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            container.removeEventListener('click', handleClickInside);
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     useEffect(() => {
             if (!masterTimelineContainerRef.current) return;
             if (!timelinesWithItems || timelinesWithItems.length === 0) return;
@@ -38,8 +60,6 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd, image
                 timelineRef.current.destroy();
                 timelineRef.current = null;
             }
-
-            console.log("Received timelinesWithItems in CombinedVisTimeline:", timelinesWithItems);
     
             // Create visTimelineItems - flatten all items from all timelines
             const visTimelineItems: VisTimelineItem[] = timelinesWithItems.flatMap((timeline, timelineIndex) =>
@@ -74,7 +94,6 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd, image
                     };
                 })
             );
-            console.log("CombinedVisTimeline - visTimelineItems:", visTimelineItems);
             // Create groups for each timeline
             const groups: VisDataGroup[] = timelinesWithItems.map((timeline, index) => ({
                 id: index + 1,
@@ -111,14 +130,9 @@ function CombinedVisTimeline({ timelinesWithItems, windowStart, windowEnd, image
                         item: "top"
                     },
                     groupHeightMode: "auto",
-                    // height: "100%"
-                    // stack: true,
-                    // selectable: true,
-                    // zoomKey: "ctrlKey",
+                    zoomKey: "ctrlKey", // disabled until user clicks inside
                     start: windowStart!,
                     end: windowEnd!,
-                    // // xss: { disabled: true },
-                    // margin: { item: { horizontal: 10, vertical: 10 } }
                 }
             );
         }, [timelinesWithItems])
