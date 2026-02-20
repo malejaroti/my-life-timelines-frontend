@@ -69,24 +69,24 @@ function Home() {
     };
     const features = [
         {
+            icon: <TimelineIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
+            title: "Full-Stack TypeScript",
+            description: "React 19 + Node.js/Express, all in TypeScript end-to-end."
+        },
+        {
             icon: <MemoryIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
-            title: "Unified Memory Hub",
-            description: "Bring together scattered memories from photos, chats, journals, and social media into one organized timeline."
+            title: "JWT Auth & Protected Routes",
+            description: "Secure authentication with JSON Web Tokens, React Context for global auth state, and route guards for private pages."
         },
         {
             icon: <VisibilityIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
-            title: "Holistic Life View",
-            description: "Visualize all areas of your life - work, relationships, health, travels, and personal growth - in one place."
-        },
-        {
-            icon: <TimelineIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
-            title: "Milestone Tracking",
-            description: "Track important life events, from baby's first steps to career changes, with meaningful context and reflection."
+            title: "vis-timeline Integration",
+            description: "Complex third-party DOM library integrated into React with useRef and useEffect, supporting dynamic grouped timelines."
         },
         {
             icon: <StoriesIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
-            title: "Storytelling & Reflection",
-            description: "Connect the dots in your life journey and share meaningful stories with loved ones."
+            title: "REST API + MongoDB",
+            description: "Express REST API with Mongoose models, Cloudinary image uploads, and bcrypt password hashing."
         }
     ];
     
@@ -118,12 +118,14 @@ function Home() {
                 <Box
                     sx={{
                         background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)',
-                        minHeight: '30vh',
+                        minHeight: { xs: '40vh', md: '30vh' },
                         width: '100%',
                         position: 'relative',
                         display: 'flex',
                         alignItems: 'center',
-                        overflow: 'hidden'
+                        justifyContent: 'center',
+                        overflow: 'hidden',
+                        paddingTop: '64px', // offset for fixed navbar
                     }}
                 >
                     <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2, justifyContent: 'center', display: 'flex' }}>
@@ -151,7 +153,7 @@ function Home() {
                                             textAlign: 'center',
                                             color: 'rgba(255, 255, 255, 0.9)',
                                             fontWeight: 400,
-                                            fontSize: { xs: '1.2rem', md: '1.3rem' },
+                                            fontSize: { xs: '1.1rem', md: '1.3rem' },
                                             lineHeight: 1.4
                                         }}
                                     >
@@ -227,16 +229,17 @@ function Home() {
             <section id="demo" style={{ scrollMarginTop: '64px' }}>
                 <Stack>
                     {/* Explanation buttons use */}
-                    <Typography variant="h6" sx={{textAlign: 'center', mt: 2, color: '#1e3a8a'}}>
+                    <Typography variant="h6" sx={{textAlign: 'center', mt: 2, color: '#1e3a8a', width: '80%', mx: 'auto'}}>
                         Explore the Demo Timelines by clicking the buttons below 👇
                     </Typography>
                     {/* Buttons to select timeline */}
                     <Box sx={{
                         margin: 'auto',
                         display: 'flex',
-                        gap: 4,
                         padding: 2,
                         justifyContent: 'center',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        gap: { xs: 2, md: 8 }
                     }}>
                         <Button sx={{border: '0.1px solid #d4d4d4'}}
                             onClick={() => setTimelineConfiguration(BooksTimelineConfig)}
@@ -284,7 +287,7 @@ function Home() {
                                     color: '#1e3a8a'
                                 }}
                             >
-                                🌟 Why It Matters
+                                🛠️ What's Under the Hood
                             </Typography>
                             <Typography
                                 variant="h6"
@@ -293,11 +296,11 @@ function Home() {
                                     fontSize: { xs: '1.1rem', md: '1.3rem' }
                                 }}
                             >
-                                Transform how you connect with your life story
+                                Built as a portfolio project — full-stack, production-ready architecture
                             </Typography>
                         </Box>
 
-                        <div className='flex gap-30'>
+                        <div className='flex flex-col md:flex-row gap-6 md:gap-8'>
                             {features.map((feature, index) => (
                                 <div className='flex' key={index}>
                                     <Card
@@ -373,7 +376,7 @@ function Home() {
                                 color: '#1e3a8a'
                             }}
                         >
-                            👉 Ready to Connect the Dots?
+                            👉 Ready to create your visual story?
                         </Typography>
 
                         <Typography
@@ -381,10 +384,10 @@ function Home() {
                             sx={{
                                 color: '#475569',
                                 fontSize: { xs: '1.1rem', md: '1.3rem' },
-                                maxWidth: 500
+                                maxWidth: { xs: '20rem', md: '60rem' },
                             }}
                         >
-                            Join thousands who've transformed their scattered memories into meaningful life stories
+                            Create your account and start building your own visual timelines today. It's free, fun, and a unique way to reflect on your life's journey!
                         </Typography>
 
                         <Button
