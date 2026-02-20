@@ -1,26 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from "react-router";
-import { AuthContext } from "../../context/auth.context";
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const navigate = useNavigate();
-    const authContext = useContext(AuthContext);
-
-
-    if (!authContext) {
-        throw new Error('This page must be used within an AuthWrapper');
-    }
-
-    const { isLoggedIn } = authContext;
-    const handleGetStarted = () => {
-        if (isLoggedIn) {
-            navigate('/lifetimeline');
-        } else {
-            navigate('/sign-up');
-        }
-    };
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10);
         window.addEventListener("scroll", handleScroll);
@@ -66,27 +50,6 @@ return (
             <Button variant="contained" sx={{ size: "small", color:'white'}} onClick={()=>navigate('/sign-up')}>
                 Sign Up
             </Button>
-            {/* <Button
-                onClick={handleGetStarted}
-                variant="contained"
-                size="large"
-                sx={{
-                    fontSize: '1rem',
-                    borderRadius: 4,
-                    textTransform: 'none',
-                    backgroundColor: '#3b82f6',
-                    color: 'white',
-                    // fontWeight: 'bold',
-                    '&:hover': {
-                        backgroundColor: '#1e3a8a',
-                        transform: 'translateY(-3px)',
-                        boxShadow: '0 12px 30px rgba(59, 130, 246, 0.4)'
-                    },
-                    transition: 'all 0.3s ease'
-                }}
-                >
-                {isLoggedIn ? 'View Your Timeline' : 'Create Your Timeline'}
-                </Button> */}
         </div>
 
         </div>
