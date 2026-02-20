@@ -224,7 +224,7 @@ function Home() {
                     />
                 </Box>
             </section>
-            <section id="demo">
+            <section id="demo" style={{ scrollMarginTop: '64px' }}>
                 <Stack>
                     {/* Explanation buttons use */}
                     <Typography variant="h6" sx={{textAlign: 'center', mt: 2, color: '#1e3a8a'}}>
@@ -270,7 +270,7 @@ function Home() {
             </section>
 
             {/* Features Section */}
-            <section id="features">
+            <section id="features" style={{ scrollMarginTop: '64px' }}>
                 <Container sx={{ py: { xs: 6, md: 10 }, width:'100%'}}>
                     <Stack spacing={8}>
                         <Box textAlign="center">
