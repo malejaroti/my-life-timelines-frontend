@@ -5,7 +5,7 @@ import SignIn from './sign-in/SignIn.tsx';
 
 // import BorderBox from './components/BorderBox'
 // import Footer from './components/Footer'
-import Navbar from './components/layout/Navbar.tsx';
+// import Navbar from './components/layout/Navbar.tsx';
 import OnlyPrivate from './components/OnlyPrivate.tsx';
 import TimelinesPage from './pages/TimelinesPage.tsx';
 import TimelineItemsPage from './pages/TimelineItemsPage.tsx';
@@ -15,6 +15,7 @@ import LifeTimeline from './pages/LifeTimeline.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 import UserProfilePage from './pages/UserProfilePage.tsx';
 import PageContainer from './components/layout/PageContainer.tsx';
+import Navbar from './components/layout/NavbarNew.tsx';
 
 // import Link from '@mui/material/Link'
 
