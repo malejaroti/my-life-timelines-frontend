@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { AuthContext } from '../context/auth.context';
 import {
     Box,
@@ -53,6 +53,7 @@ type timelineConfig = {
 function Home() {
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
     const authContext = useContext(AuthContext);
 
     if (!authContext) {
@@ -67,6 +68,24 @@ function Home() {
             navigate('/sign-up');
         }
     };
+    useEffect(() => {
+        if (location.state?.scrollTo) {
+            // Wait for the layout to fully stabilize (async components like vis-timeline)
+            // before scrolling, otherwise the target position is wrong.
+            const id = location.state.scrollTo;
+            const timer = setTimeout(() => {
+                requestAnimationFrame(() => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const navbarHeight = 64;
+                        const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                });
+            }, 400); // allow async children to render and settle
+            return () => clearTimeout(timer);
+        }
+    }, [location.state]);
     const features = [
         {
             icon: <TimelineIcon sx={{ fontSize: 40, color: theme.palette.primary.main }} />,
@@ -226,7 +245,7 @@ function Home() {
                     />
                 </Box>
             </section>
-            <section id="demo" style={{ scrollMarginTop: '64px' }}>
+            <section id="demo" style={{ scrollMarginTop: '64px', minHeight: '450px' }}>
                 <Stack>
                     {/* Explanation buttons use */}
                     <Typography variant="h6" sx={{textAlign: 'center', mt: 2, color: '#1e3a8a', width: '80%', mx: 'auto'}}>
