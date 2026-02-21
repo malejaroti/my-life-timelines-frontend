@@ -1,26 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import ForgotPassword from './components/ForgotPassword';
-import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
 import api from '../services/config.services';
 import { AuthContext } from '../context/auth.context';
 import { useNavigate } from 'react-router';
-import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
+import { SignContainer, CardForSignContainer } from '../components/styled/Styled_AuthForms';
 import { Alert } from '@mui/material';
+import Link from '@mui/material/Link';
+import Divider from '@mui/material/Divider';
 
-export default function SignIn(props: { disableCustomTheme?: boolean }) {
+
+export default function SignIn() {
   const authContext = React.useContext(AuthContext);
   if (!authContext) {
     throw new Error('SignIn must be used within an AuthWrapper');
@@ -31,21 +25,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
   const [serverErrorMsg, setServerErrorMsg] = React.useState("");
   const [formData, setFormData] = React.useState({
     email: '',
     password: '',
   });
   const navigate = useNavigate();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -118,12 +103,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   };
 
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
-      <SignContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect
-          sx={{ position: 'fixed', top: '1rem', right: '1rem' }}
-        />
+      <SignContainer direction="column">
         <CardForSignContainer variant="outlined">
           <Typography
             component="h1"
@@ -181,11 +161,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 onChange={handleOnChange}
               />
             </FormControl>
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
-            <ForgotPassword open={open} handleClose={handleClose} />
             <Button
               type="submit"
               fullWidth
@@ -202,37 +177,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 </Alert>
               : null
             }
-            {/* <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center'}}
-              disabled // not supported natively by Link component
-            >
-              Forgot your password?
-            </Link> */}
           </Box>
-          <Divider>or</Divider>
+          <Divider>
+            <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+          </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              disabled
-              onClick={() => alert('Sign in with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
-            <Button
-              disabled
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
@@ -248,6 +197,5 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Box>
         </CardForSignContainer>
       </SignContainer>
-    </AppTheme>
   );
 }
