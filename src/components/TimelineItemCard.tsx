@@ -82,7 +82,7 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
     const calculateDaysSinceStartDate = (startDate?: string, endDate?: string): string => {
         if (!startDate) return '';
         
-        const days = calculateDaysBetween(startDate);
+        const days = calculateDaysBetween(startDate, endDate);
         const prefix = endDate === null || endDate === undefined ? "Started: " : " "; // Only show "Started" if the event is ongoing
         const timePeriod = formatTimePeriod(days);
         
@@ -118,11 +118,12 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 // justifyContent: 'space-between'
             }}
         >
-            {   
+            {/* {   
                 <Typography variant="body2" sx={{ color: 'text.secondary', marginBottom: '10px', fontSize: '0.7rem' }}>
+                    
                     My age: {calculateAgeAtDate("12/16/1997",timelineItem.startDate )}
                 </Typography>
-            }
+            } */}
 
             {timelineItem.images.length !== 0 ?
                 // <CardMedia
@@ -289,11 +290,6 @@ function TimelineItemCard({ timelineItem, callbackOnClickTrash, callbackOnClickE
                 </IconButton>
 
             </Box>
-            {/* <Box>
-                <Typography variant="body2" sx={{ color: 'text.secondary', position: 'absolute', top: 10, left: 10, fontSize: '0.7rem' }}>
-                    My age: {calculateAgeAtDate("12/16/1997",timelineItem.startDate )}
-                </Typography>
-            </Box> */}
         </Card>
     )
 }
