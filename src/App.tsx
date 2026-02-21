@@ -2,8 +2,6 @@ import './App.css';
 import { Routes, Route } from 'react-router';
 import SignUp from './sign-up/SignUp.tsx';
 import SignIn from './sign-in/SignIn.tsx';
-
-// import BorderBox from './components/BorderBox'
 import Footer from './components/Footer'
 // import Navbar from './components/layout/Navbar.tsx';
 import OnlyPrivate from './components/OnlyPrivate.tsx';
@@ -17,26 +15,19 @@ import UserProfilePage from './pages/UserProfilePage.tsx';
 import PageContainer from './components/layout/PageContainer.tsx';
 import Navbar from './components/layout/NavbarNew.tsx';
 
-// import Link from '@mui/material/Link'
-
 function App() {
   return (
     <>
-      {/* Navbar */}
-      <div className="flex flex-col flex-1">
-        {/* <Navbar/> */}
+      <div className="flex flex-col flex-1 min-h-screen">
         <Navbar />
-
-        {/* Main container */}
         <main className="max-w-full flex-1">
-          {/* <div className='central-section bb-black h-full w-[50%] m-auto'> */}
           <Routes>
             {/* Full-bleed pages — no wrapper */}
             <Route path="/" element={<Home />} />
             <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/sign-in" element={<SignIn disableCustomTheme={false} />} />
+            <Route path="/sign-in" element={<SignIn />} />
             
-            {/* Contained pages — wrapper applied once here */}
+            {/* Contained pages — wrapper with padding*/}
             <Route element={<PageContainer />}>
               <Route path="/timelines" element={<OnlyPrivate><TimelinesPage/></OnlyPrivate>} />
               <Route path="/timeline/:timelineId" element={<OnlyPrivate>{' '}<TimelineItemsPage />{' '} </OnlyPrivate>} />
@@ -45,20 +36,11 @@ function App() {
 
               <Route path="/error" element={<ErrorPage />} />
               <Route path="*" element={<NotFoundPage />} />
-              {/* <Route path="/about" element={<AboutPage />} /> */}
             </Route>
-
           </Routes>
-          {/* </div> */}
         </main>
-        {/* <BorderBox borderColor={"red"}>
-            <main className='w-full flex-1 bb'>
-            </main>
-          </BorderBox> */}
         <Footer />
       </div>
-      {/* Main page */}
-      {/* Footer */}
     </>
   );
 }
