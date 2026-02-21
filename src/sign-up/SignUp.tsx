@@ -1,17 +1,9 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
 import api from '../services/config.services';
 import { useNavigate } from 'react-router';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
@@ -22,9 +14,12 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
-import { SignContainer, CardForSignContainer } from '../components/styled/Sytled_AuthForms';
+import Link from '@mui/material/Link';
+import Divider from '@mui/material/Divider';
 
-export default function SignUp(props: { disableCustomTheme?: boolean }) {
+import { SignContainer, CardForSignContainer } from '../components/styled/Styled_AuthForms';
+
+export default function SignUp() {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
@@ -132,10 +127,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   };
 
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
-      <SignContainer direction="column" justifyContent="space-between">
+      <SignContainer direction="column">
         <CardForSignContainer variant="outlined">
           {/* <SitemarkIcon /> */}
           <Typography
@@ -153,6 +145,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <FormControl>
               <FormLabel htmlFor="name">Full name</FormLabel>
               <TextField
+                autoFocus
                 autoComplete="name"
                 name="name"
                 required
@@ -230,24 +223,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Typography sx={{ color: 'text.secondary' }}>or</Typography>
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              disabled
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign up with Google
-            </Button>
-            <Button
-              disabled
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign up with Facebook
-            </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
@@ -263,6 +238,5 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           </Box>
         </CardForSignContainer>
       </SignContainer>
-    </AppTheme>
   );
 }

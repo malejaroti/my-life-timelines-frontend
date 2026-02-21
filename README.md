@@ -15,7 +15,7 @@ A modern, full-stack timeline visualization application built with React, TypeSc
 - **Timeline Management**: Create, edit, and delete personal timelines
 - **Timeline Items**: Add detailed events to your timelines with rich content
 - **Image Upload**: Upload and manage images for timeline events
-- **Responsive Design**: Beautiful Material-UI components with dark/light mode support
+- **Responsive Design**: Beautiful Material-UI components
 - **Profile Management**: User profile customization
 - **Protected Routes**: Secure access to authenticated content
 
