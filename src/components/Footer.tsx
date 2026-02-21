@@ -15,6 +15,7 @@ function Footer() {
           gap: 1,
           py: 3,
           borderTop: '1px solid rgba(0,0,0,0.1)',
+          alignSelf: 'flex-end',
         }}
       >
         <Box sx={{ display: 'flex', gap: 1 }}>
