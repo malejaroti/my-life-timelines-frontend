@@ -51,7 +51,6 @@ function getWeekEnd(todayDate: Date) {
         return weekEndDate;
     }
 }
-
 function getMonthStart(todayDate: Date) {
     return new Date(todayDate.getFullYear(), todayDate.getMonth(), 1, 0, 0, 0, 0);
 }
@@ -120,7 +119,7 @@ function LifeTimeline() {
             content: timeline.timelineTitle,
         }));
 
-        // Set CSS custom properties for group colors (kept as in your code)
+        // Set CSS custom properties for group colors
         timelinesWithItems.forEach((timeline, index) => {
             const groupId = index + 1;
             if (masterTimelineContainerRef.current) {
