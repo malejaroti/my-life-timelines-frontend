@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router';
 import TimelineCard from '../components/TimelineCard';
 import Drawer from '@mui/material/Drawer';
@@ -143,7 +144,7 @@ function TimelinesPage() {
   return (
     <main className='relative flex flex-col gap-8 m-auto'>
       <section className="user-timelines">
-        <Box
+        {/* <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between'
@@ -174,16 +175,16 @@ function TimelinesPage() {
               Add timeline
             </Button>
           </Stack>
-        </Box>
+        </Box> */}
         <Box>
           <CombinedLinearTimeline items={allTimelineItems} />
         </Box>
         
-        {/* Container for timelines list (left) and timelines container(right) */}
+        {/* Container for sidebar (left) and timelines container(right) */}
         <Stack direction="row" spacing={2}
           sx={{ pt: 3 }}
         >
-          {/* Left - Timelines list */}
+          {/* Left - Sidebar with timelines list */}
           <Stack spacing={2}> 
             <Box
               sx={{    
@@ -195,7 +196,25 @@ function TimelinesPage() {
                 height: 'fit-content', 
                 flexShrink: 0
               }}>
-              <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>MY OWN TIMELINES</Typography>
+                <div className="flex gap-4 justify-between items-center mb-2">
+                  <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>Created by me</Typography>
+                  {/* <AddButton onClick={openDrawerWithCreateForm} /> */}
+                  <Button
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    onClick={() => openDrawerWithCreateForm()}
+                    size='small'
+                    sx={{
+                      '&:hover': {
+                        fontcolor: 'primary.main',
+                      },
+                    }}
+                  >
+                    New
+                  </Button>
+
+
+                </div>
               {userTimelines.map((timeline, index) => (
                 <Typography
                   key={timeline._id}
