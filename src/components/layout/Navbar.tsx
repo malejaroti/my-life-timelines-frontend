@@ -54,7 +54,7 @@ const logoutButtonTextStyles = {
   color: 'blue', // Ensure text is always white on the button
 };
 
-function Navbar() {
+function NavbarOld() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   if (!authContext) {
@@ -181,4 +181,4 @@ function Navbar() {
     </nav>
   );
 }
-export default Navbar;
+export default NavbarOld;
